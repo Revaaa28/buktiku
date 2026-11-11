@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BuktiKu — Check the claim against its source, offline first</title>
+<meta name="description" content="BuktiKu is an offline-first claim checker: paste a claim and its source. Gemini Nano on-device does the first pass, cloud Gemini via Firebase AI Logic does the deep check, deterministic code decides numbers and dates.">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <h1>BuktiKu</h1>
+    <p class="tagline">Check the claim against its source — offline first.</p>
+    <p class="sub">
+      Paste a claim and the source it came from. On-device Gemini Nano does the
+      first pass without your documents leaving the device, cloud Gemini via
+      Firebase AI Logic does the deep check when you are online, and
+      deterministic code — not a model — decides numbers, dates and names.
+      Claim-vs-source consistency only; no open-web fact-checking.
+    </p>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="card" aria-labelledby="status-h">
+    <h2 id="status-h">Engine status</h2>
+    <ul class="status-list">
+      <li>On-device Gemini Nano (Chrome Prompt API): <strong id="st-nano">detecting…</strong></li>
+      <li>Connection: <strong id="st-online">…</strong></li>
+      <li>Cloud (Firebase AI Logic): <strong id="st-cloud">…</strong></li>
+    </ul>
+    <p id="fallback-note" class="note" hidden></p>
+  </section>
+
+  <section class="card">
+    <h2>Try a sample</h2>
+    <div id="samples" class="sample-row"></div>
+  </section>
+
+  <section class="card">
+    <div class="grid">
+      <div>
+        <label for="claim">Claim</label>
+        <textarea id="claim" rows="9" placeholder="Paste the claim here — a viral summary, a recruiter's pitch, a reimbursement note…"></textarea>
+        <p class="count"><span id="claim-count">0</span> characters</p>
+      </div>
+      <div>
+        <label for="source">Source</label>
+        <textarea id="source" rows="9" placeholder="Paste the original source here — the announcement, receipt, or posting the claim came from…"></textarea>
+        <p class="count"><span id="source-count">0</span> characters</p>
+      </div>
+    </div>
+    <button id="check" class="primary">Check the claim</button>
+    <p id="form-error" class="error" hidden></p>
+  </section>
+
+  <section class="card" id="results-card" hidden>
+    <h2>Result</h2>
+    <p>Overall verdict: <span id="overall" class="badge"></span></p>
+    <div id="results"></div>
+  </section>
+
+  <section class="card">
+    <h2>Routing log</h2>
+    <p class="note">Every routing decision this session — which engine ran, why, and how long it took. Fallbacks are stated, never hidden.</p>
+    <div id="routing-log"><p class="note">No checks run yet.</p></div>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  <p>BuktiKu · Built for the Firebase #BuildHybridAI 2026 hackathon · Apache-2.0</p>
+</footer>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

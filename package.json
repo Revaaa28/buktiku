@@ -1,0 +1,15 @@
+{
+  "dependencies": {},
+  "description": "BuktiKu — offline-first claim checker. Paste a claim and its source; on-device Gemini Nano does the first pass, cloud Gemini via Firebase AI Logic does the deep check, deterministic code decides numbers and dates.",
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "Apache-2.0",
+  "name": "buktiku",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "type": "module",
+  "version": "0.1.0"
+}
