@@ -1,30 +1,27 @@
 // ============================================================================
-// BuktiKu — Firebase configuration (PLACEHOLDER — TODO: fill in for real use)
+// BuktiKu — Firebase configuration
 // ============================================================================
+// Project: BuktiKu (buktiku-d5216), created 2026-11-12 for the
+// #BuildHybridAI 2026 hackathon. AI Logic is enabled in the console with
+// the Gemini Developer API backend (Spark plan, free tier).
 //
-// This file ships with placeholder values on purpose. While the config is
-// a placeholder, BuktiKu runs in "placeholder mode": the cloud path is
-// skipped with an honest note in the UI and routing log, and the app runs
-// fully on the deterministic engine + the on-device (Chrome Prompt API)
-// path. No AI verdict is ever faked in placeholder mode.
+// These values are public client identifiers for the web app (they are
+// shown to every visitor's browser by design) — they are NOT secrets.
+// Access is controlled by Firebase security rules and App Check.
 //
-// TODO (setup, done together with the project owner):
-//   1. Create a Firebase project at https://console.firebase.google.com
-//   2. Register a Web app and copy its firebaseConfig values below.
-//   3. In the Firebase console, enable "AI Logic" (Gemini Developer API
-//      backend is fine on the Spark plan) for the project.
-//   4. Enable App Check for the web app (reCAPTCHA v3 provider) and paste
-//      the site key into appCheckSiteKey below. During local development
-//      you may instead register a debug token — see README.md.
-//   5. NEVER commit real production secrets here. The values below are
-//      client identifiers, not secrets, but keep production keys out of
-//      this repository as a matter of policy.
+// App Check: enable the reCAPTCHA v3 provider for this web app in the
+// Firebase console and paste the site key into appCheckSiteKey below.
+// Until a site key is set, the app uses an App Check debug token flow
+// during development (see cloud.js and README.md).
 
 export const firebaseConfig = {
-  apiKey: 'TODO-REPLACE-ME',
-  authDomain: 'TODO-REPLACE-ME.firebaseapp.com',
-  projectId: 'TODO-REPLACE-ME',
-  appId: 'TODO-REPLACE-ME',
+  apiKey: 'AIzaSyCIvjRGTCYNA-rt05RJXDyVlqsFKb_v6ZA',
+  authDomain: 'buktiku-d5216.firebaseapp.com',
+  projectId: 'buktiku-d5216',
+  storageBucket: 'buktiku-d5216.firebasestorage.app',
+  messagingSenderId: '453282732387',
+  appId: '1:453282732387:web:fbf0b7fdd0cfc7af321b56',
+  measurementId: 'G-SLMN86DT76',
 };
 
 // reCAPTCHA v3 site key for App Check. Leave empty during local
