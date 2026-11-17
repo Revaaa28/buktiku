@@ -22,10 +22,12 @@ const HISTORY_LIMIT = 20;
  * Build the Firestore document for a finished check. Pure function —
  * the caller adds the server timestamp at write time.
  */
-export function buildCheckDocument(claim, source, result) {
+export function buildCheckDocument(claim, source, result, meta) {
   return {
     claim,
     source,
+    sourceUrl: meta?.url ?? null,
+    sourceTitle: meta?.title ?? null,
     overall: result.overall,
     cloudRan: !!result.cloudRan,
     points: (result.points || []).map(p => ({
@@ -64,11 +66,11 @@ function checksCollection({ auth, db, fsModule }) {
 }
 
 /** Save a finished check. Resolves with the new document id. */
-export async function saveCheck(claim, source, result) {
+export async function saveCheck(claim, source, result, meta) {
   const store = await initStore();
   const { fsModule } = store;
   const ref = await fsModule.addDoc(checksCollection(store), {
-    ...buildCheckDocument(claim, source, result),
+    ...buildCheckDocument(claim, source, result, meta),
     createdAt: fsModule.serverTimestamp(),
   });
   return ref.id;

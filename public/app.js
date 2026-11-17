@@ -49,8 +49,11 @@ $('fetch-source').addEventListener('click', async () => {
     });
     const data = await res.json();
     if (!data.ok) throw new Error(data.error || 'Fetch failed.');
+    sourceFromFetch = true;
     sourceEl.value = data.text;
     sourceEl.dispatchEvent(new Event('input'));
+    sourceFromFetch = false;
+    sourceMeta = { url: data.finalUrl, title: data.title || '' };
     let host = '';
     try { host = new URL(data.finalUrl).hostname; } catch { /* note stays generic */ }
     note.textContent =
@@ -73,6 +76,7 @@ for (const s of SAMPLES) {
   b.addEventListener('click', () => {
     claimEl.value = s.claim;
     sourceEl.value = s.source;
+    sourceMeta = null; // sample text is not the fetched page
     updateCounts();
     $('form-error').hidden = true;
   });
@@ -108,8 +112,28 @@ window.addEventListener('offline', refreshStatus);
 refreshStatus();
 
 // --------------------------------------------------------------- check
-function renderResults({ overall, points }) {
+// Provenance of the current Source box content, when it came from a
+// fetched link: { url, title }. Cleared the moment the user edits the
+// source by hand, so the attribution never claims a page the text no
+// longer comes from.
+let sourceMeta = null;
+let sourceFromFetch = false;
+sourceEl.addEventListener('input', () => { if (!sourceFromFetch) sourceMeta = null; });
+
+function renderResults({ overall, points }, meta) {
   $('results-card').hidden = false;
+  const attrib = $('source-attrib');
+  if (meta && meta.url) {
+    let host = meta.url;
+    try { host = new URL(meta.url).hostname; } catch { /* keep the raw URL */ }
+    attrib.innerHTML =
+      `Checked against: <a href="${esc(meta.url)}" target="_blank" rel="noopener noreferrer">${esc(meta.title || meta.url)}</a>` +
+      ` <span class="attrib-host">· ${esc(host)}</span>`;
+    attrib.hidden = false;
+  } else {
+    attrib.hidden = true;
+    attrib.innerHTML = '';
+  }
   const overallEl = $('overall');
   overallEl.textContent = overall;
   overallEl.className = 'badge ' + overall.toLowerCase().replace(/\s+/g, '-');
@@ -165,7 +189,7 @@ $('check').addEventListener('click', async () => {
   btn.textContent = 'Checking…';
   try {
     const result = await router.check(claim, source, { nanoStatus, online: navigator.onLine });
-    renderResults(result);
+    renderResults(result, sourceMeta);
     // Bring the outcome to the person: after the response completes,
     // focus and view land on the verdict, not on the spinner's ghost.
     const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -173,7 +197,7 @@ $('check').addEventListener('click', async () => {
     $('results-card').scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' });
     renderLog();
     refreshStatus();
-    persistCheck(claim, source, result);
+    persistCheck(claim, source, result, sourceMeta);
   } finally {
     btn.disabled = false;
     btn.textContent = 'Check the claim';
@@ -205,7 +229,8 @@ function renderHistory(items) {
       claimEl.value = item.claim;
       sourceEl.value = item.source;
       updateCounts();
-      renderResults({ overall: item.overall, points: item.points || [] });
+      sourceMeta = item.sourceUrl ? { url: item.sourceUrl, title: item.sourceTitle || '' } : null;
+      renderResults({ overall: item.overall, points: item.points || [] }, sourceMeta);
       $('history-status').textContent =
         `Showing the saved check from ${when} — stored verdict re-rendered, no engine was re-run.`;
       $('results-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -228,11 +253,11 @@ async function loadHistory() {
   }
 }
 
-async function persistCheck(claim, source, result) {
+async function persistCheck(claim, source, result, meta) {
   if (!cloudConfigured()) return;
   $('history-card').hidden = false;
   try {
-    await saveCheck(claim, source, result);
+    await saveCheck(claim, source, result, meta);
     $('history-status').textContent = 'Saved to your history just now.';
     loadHistory();
   } catch (e) {

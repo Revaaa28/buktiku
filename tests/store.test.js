@@ -46,3 +46,13 @@ test('buildCheckDocument tolerates a result without points', () => {
   const doc = buildCheckDocument('c', 's', { overall: 'Consistent' });
   assert.deepEqual(doc.points, []);
 });
+
+test('buildCheckDocument stores source provenance when fetched from a link', () => {
+  const withMeta = buildCheckDocument('C', 'S', { overall: 'Consistent', points: [] },
+    { url: 'https://news.example/a', title: 'Judul Berita' });
+  assert.equal(withMeta.sourceUrl, 'https://news.example/a');
+  assert.equal(withMeta.sourceTitle, 'Judul Berita');
+  const noMeta = buildCheckDocument('C', 'S', { overall: 'Consistent', points: [] });
+  assert.equal(noMeta.sourceUrl, null);
+  assert.equal(noMeta.sourceTitle, null);
+});

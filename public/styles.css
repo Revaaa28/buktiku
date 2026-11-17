@@ -562,3 +562,17 @@ table.log td:nth-child(2) { color: var(--ink); font-weight: 600; white-space: no
 .ghost-btn:hover:not(:disabled) { background: rgba(129, 140, 248, .22); transform: translateY(-1px); }
 .ghost-btn:disabled { opacity: .55; cursor: wait; }
 #fetch-note { margin: 0 0 10px; }
+
+/* ------------------------------------------------- source attribution */
+.attrib {
+  margin: 0 0 14px;
+  padding: 11px 15px;
+  background: rgba(129, 140, 248, .08);
+  border: 1px solid rgba(129, 140, 248, .25);
+  border-radius: 12px;
+  color: var(--muted);
+  font-size: .92rem;
+}
+.attrib a { color: #a5b4fc; font-weight: 650; text-decoration: none; }
+.attrib a:hover { text-decoration: underline; }
+.attrib-host { color: var(--faint); }
