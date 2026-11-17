@@ -41,7 +41,44 @@
   <div class="chip chip-c" aria-hidden="true">!&nbsp; Dropped condition: GPA ≥ 3.50</div>
 </header>
 
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>Gemini Nano · on-device first pass</span><i>✦</i>
+    <span>Firebase AI Logic · cloud deep check</span><i>✦</i>
+    <span>Deterministic code · numbers, dates, names</span><i>✦</i>
+    <span>App Check · verified requests</span><i>✦</i>
+    <span>Firestore · your private history</span><i>✦</i>
+    <span>Gemini Nano · on-device first pass</span><i>✦</i>
+    <span>Firebase AI Logic · cloud deep check</span><i>✦</i>
+    <span>Deterministic code · numbers, dates, names</span><i>✦</i>
+    <span>App Check · verified requests</span><i>✦</i>
+    <span>Firestore · your private history</span><i>✦</i>
+  </div>
+</div>
+
 <main class="wrap">
+  <section class="sec" aria-labelledby="how-h">
+    <p class="eyebrow">How it works</p>
+    <h3 id="how-h" class="sec-title">Three engines. One verdict you can audit.</h3>
+    <div class="steps">
+      <article class="step">
+        <span class="step-num">01</span>
+        <h4>Paste the claim and its source</h4>
+        <p>A viral summary next to the announcement it came from. A recruiter's pitch next to the real posting. The first pass runs on your device — your text goes to the cloud only for the deep check, and only when you are online.</p>
+      </article>
+      <article class="step">
+        <span class="step-num">02</span>
+        <h4>The engines route the work</h4>
+        <p>Gemini Nano extracts the checkable points on-device. Cloud Gemini via Firebase AI Logic reads for meaning when online. Deterministic code then compares every number, date and name — the facts a model should never get to improvise.</p>
+      </article>
+      <article class="step">
+        <span class="step-num">03</span>
+        <h4>Read a verdict with evidence</h4>
+        <p>Every point comes back supported, contradicted, or not in the source — with the source quote as evidence, a badge naming the engine that decided it, and a routing log that records every decision, including the fallbacks.</p>
+      </article>
+    </div>
+  </section>
+
   <section class="card" aria-labelledby="status-h">
     <h2 id="status-h">Engine status</h2>
     <div class="tiles">
@@ -94,6 +131,25 @@
     <div id="routing-log"><p class="note">No checks run yet.</p></div>
   </section>
 
+  <section class="sec" aria-labelledby="principles-h">
+    <p class="eyebrow">Principles</p>
+    <h3 id="principles-h" class="sec-title">Built so a judge can check the checker.</h3>
+    <div class="steps">
+      <article class="step">
+        <h4>Code decides the facts</h4>
+        <p>Numbers, dates and names are compared by deterministic code — never by a model's mood. Rp 15,000,000 either equals Rp 10,000,000 or it does not.</p>
+      </article>
+      <article class="step">
+        <h4>Every verdict names its engine</h4>
+        <p>Each point carries a routing badge and a latency. You always know whether Nano, the cloud model, or plain code produced the answer you are reading.</p>
+      </article>
+      <article class="step">
+        <h4>Fallbacks are stated, never hidden</h4>
+        <p>If an engine is unavailable, the status panel and the routing log say so in plain words. Nothing on this page is simulated or faked — unavailable means skipped, and skipped means logged.</p>
+      </article>
+    </div>
+  </section>
+
   <section class="card" id="history-card" hidden>
     <h2>Saved checks</h2>
     <p id="history-status" class="note">Loading your history…</p>
@@ -102,8 +158,23 @@
   </section>
 </main>
 
-<footer class="wrap foot">
-  <p>BuktiKu · Built for the Firebase #BuildHybridAI 2026 hackathon · Apache-2.0</p>
+<footer class="wrap foot-pro">
+  <div class="foot-col">
+    <p class="foot-brand"><img src="logo.svg" alt="" width="26" height="26"> BuktiKu</p>
+    <p class="note">An offline-first claim checker. Paste a claim and its source; get a verdict with evidence.</p>
+  </div>
+  <div class="foot-col">
+    <p class="foot-h">Built with</p>
+    <p class="note">Firebase AI Logic · Gemini Nano (Chrome Prompt API) · Cloud Firestore · Firebase App Check</p>
+  </div>
+  <div class="foot-col">
+    <p class="foot-h">Project</p>
+    <p class="note">
+      <a href="https://github.com/Revaaa28/buktiku">GitHub repository</a><br>
+      Firebase #BuildHybridAI 2026<br>
+      Open source · Apache-2.0
+    </p>
+  </div>
 </footer>
 
 <script type="module" src="app.js"></script>

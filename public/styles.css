@@ -449,3 +449,88 @@ table.log td:nth-child(2) { color: var(--ink); font-weight: 600; white-space: no
 /* Programmatic focus target after a check completes (no ring needed —
    the focus exists so keyboard/AT users land on the verdict). */
 #results-h:focus { outline: none; }
+
+/* -------------------------------------------------------------- marquee */
+.marquee {
+  overflow: hidden;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 16px 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee-track {
+  display: flex; align-items: center; gap: 34px;
+  width: max-content;
+  animation: marquee 36s linear infinite;
+  color: var(--muted);
+  font-size: .92rem; font-weight: 600;
+  white-space: nowrap;
+}
+.marquee-track i { color: #818cf8; font-style: normal; font-size: .8rem; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* ------------------------------------------------------------- sections */
+.sec { padding: 74px 0 10px; }
+.eyebrow {
+  margin: 0 0 12px;
+  font-size: .78rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 2.6px;
+  color: #a5b4fc;
+}
+.sec-title {
+  margin: 0 0 40px;
+  font-size: clamp(1.9rem, 4.4vw, 2.9rem);
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1.08;
+  max-width: 640px;
+}
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+@media (max-width: 820px) { .steps { grid-template-columns: 1fr; gap: 22px; } }
+.step { border-top: 1px solid var(--line); padding-top: 20px; }
+.step-num {
+  display: block;
+  font-size: 2.6rem; font-weight: 850; letter-spacing: -1px;
+  color: transparent;
+  -webkit-text-stroke: 1.2px rgba(165, 180, 252, .55);
+  margin-bottom: 12px;
+}
+.step h4 { margin: 0 0 9px; font-size: 1.08rem; font-weight: 700; letter-spacing: -.2px; }
+.step p { margin: 0; color: var(--muted); font-size: .95rem; }
+
+/* Reveal also covers editorial sections (app.js observes .card, .sec). */
+.sec.reveal-init { opacity: 0; transform: translateY(18px); }
+.sec.revealed {
+  opacity: 1; transform: translateY(0);
+  transition: opacity .7s cubic-bezier(.22, .8, .32, 1), transform .7s cubic-bezier(.22, .8, .32, 1);
+}
+
+/* ------------------------------------------------------------ footer pro */
+.foot-pro {
+  display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 30px;
+  border-top: 1px solid var(--line);
+  margin-top: 64px;
+  padding-top: 38px; padding-bottom: 46px;
+}
+@media (max-width: 720px) { .foot-pro { grid-template-columns: 1fr; } }
+.foot-brand {
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 800; font-size: 1.05rem; margin: 0 0 10px;
+}
+.foot-brand img { border-radius: 7px; }
+.foot-h {
+  margin: 4px 0 10px;
+  font-size: .74rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 2px;
+  color: var(--faint);
+}
+.foot-pro a { color: #a5b4fc; text-decoration: none; }
+.foot-pro a:hover { text-decoration: underline; }
+
+/* --------------------------------------------------------- pro touches */
+::selection { background: rgba(129, 140, 248, .45); color: #fff; }
+:focus-visible { outline: 2px solid #818cf8; outline-offset: 2px; border-radius: 6px; }
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+}

@@ -231,7 +231,7 @@ updateCounts();
 // Cards fade/rise in as they enter the viewport. The hidden state is
 // only ever applied from here, so a no-JS visit sees everything.
 {
-  const cards = document.querySelectorAll('.card');
+  const cards = document.querySelectorAll('.card, .sec');
   if ('IntersectionObserver' in window) {
     const io = new IntersectionObserver(
       entries => {
