@@ -55,7 +55,7 @@ async function refreshStatus() {
   const note = $('fallback-note');
   const parts = [];
   if (!configured) parts.push('Cloud model unavailable — deterministic checks only');
-  if (!nanoStatus.available) parts.push('on-device Nano unavailable in this browser — its extraction stage is skipped');
+  if (!nanoStatus.available) parts.push('Gemini Nano\'s web API ships in desktop Chrome only — on this browser its extraction stage is skipped and the cloud + code engines carry the check');
   if (!navigator.onLine) parts.push('you are offline — local checks still run');
   if (parts.length) {
     note.textContent = 'Honest status: ' + parts.join('; ') + '. Nothing here is simulated or faked.';
