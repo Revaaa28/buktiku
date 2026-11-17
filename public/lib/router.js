@@ -22,6 +22,30 @@ import { compareClaimToSource, extractNumbers, extractDates } from './engine.js'
 import { detectNano, nanoExtractPoints } from './nano.js';
 import { cloudConfigured, cloudDeepCheck } from './cloud.js';
 
+/**
+ * Turn a raw cloud error into one short, human routing-log line.
+ * The provider's raw message is a multi-hundred-character JSON dump —
+ * useless to a reader and ugly on a public page. The failure itself is
+ * still stated plainly, never hidden.
+ */
+export function summarizeCloudError(err) {
+  const msg = String((err && err.message) || err || '');
+  if (/429|quota|RESOURCE_EXHAUSTED/i.test(msg)) {
+    return 'the daily free-tier quota for this project is used up (20 cloud checks/day) — it resets daily';
+  }
+  if (/app check|appcheck|401|403/i.test(msg)) {
+    return 'App Check rejected the request (this browser could not be verified)';
+  }
+  if (/404|not found|not supported|retired/i.test(msg)) {
+    return 'the configured cloud model is unavailable';
+  }
+  if (/timeout|timed out|deadline/i.test(msg)) {
+    return 'the cloud request timed out';
+  }
+  const clean = msg.replace(/\s+/g, ' ').trim();
+  return clean.length > 160 ? clean.slice(0, 157) + '…' : clean;
+}
+
 export class HybridRouter {
   constructor() {
     /** @type {{at:string, engine:string, reason:string, latencyMs:number|null}[]} */
@@ -154,7 +178,7 @@ export class HybridRouter {
       } catch (err) {
         this.record(
           'cloud (Firebase AI Logic)',
-          `Cloud check failed and was skipped: ${err.message}. Local results stand.`,
+          `Cloud check failed and was skipped: ${summarizeCloudError(err)}. Local results stand.`,
         );
       }
     }
