@@ -20,7 +20,10 @@ const CDN = `https://www.gstatic.com/firebasejs/${SDK_VERSION}`;
 
 let initPromise = null;
 
-async function initFirebase() {
+// Shared Firebase app initialisation — cloud.js (AI Logic) and store.js
+// (Firestore history) must use the SAME app instance and App Check
+// setup, so the initialiser lives here and is exported for reuse.
+export async function initFirebase() {
   if (initPromise) return initPromise;
   initPromise = (async () => {
     const { initializeApp } = await import(`${CDN}/firebase-app.js`);

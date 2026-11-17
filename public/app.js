@@ -6,6 +6,7 @@ import { SAMPLES } from './lib/samples.js';
 import { HybridRouter } from './lib/router.js';
 import { detectNano } from './lib/nano.js';
 import { cloudConfigured } from './lib/cloud.js';
+import { saveCheck, listChecks } from './lib/store.js';
 
 const $ = id => document.getElementById(id);
 const claimEl = $('claim');
@@ -128,10 +129,73 @@ $('check').addEventListener('click', async () => {
     renderResults(result);
     renderLog();
     refreshStatus();
+    persistCheck(claim, source, result);
   } finally {
     btn.disabled = false;
     btn.textContent = 'Check the claim';
   }
 });
 
+// ---------------------------------------------------- saved checks (Firestore)
+function badgeClass(overall) {
+  return 'badge mini ' + String(overall).toLowerCase().replace(/\s+/g, '-');
+}
+
+function renderHistory(items) {
+  const box = $('history');
+  if (!items.length) {
+    box.innerHTML = '<p class="note">No saved checks yet — run your first check above.</p>';
+    return;
+  }
+  box.innerHTML = '';
+  for (const item of items) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'history-item';
+    const when = item.createdAtMs ? new Date(item.createdAtMs).toLocaleString() : 'just now';
+    b.innerHTML =
+      `<span class="${esc(badgeClass(item.overall))}">${esc(item.overall)}</span>` +
+      `<span class="h-claim">${esc(item.claim)}</span>` +
+      `<span class="h-time">${esc(when)}</span>`;
+    b.addEventListener('click', () => {
+      claimEl.value = item.claim;
+      sourceEl.value = item.source;
+      updateCounts();
+      renderResults({ overall: item.overall, points: item.points || [] });
+      $('history-status').textContent =
+        `Showing the saved check from ${when} — stored verdict re-rendered, no engine was re-run.`;
+      $('results-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    box.appendChild(b);
+  }
+}
+
+async function loadHistory() {
+  if (!cloudConfigured()) return; // placeholder mode: no Firestore, card stays hidden
+  $('history-card').hidden = false;
+  try {
+    const items = await listChecks();
+    renderHistory(items);
+    $('history-status').textContent = items.length
+      ? `${items.length} saved check(s) in your private history.`
+      : 'Your history is ready — checks you run will be saved here.';
+  } catch (e) {
+    $('history-status').textContent = `History unavailable: ${e.message}`;
+  }
+}
+
+async function persistCheck(claim, source, result) {
+  if (!cloudConfigured()) return;
+  $('history-card').hidden = false;
+  try {
+    await saveCheck(claim, source, result);
+    $('history-status').textContent = 'Saved to your history just now.';
+    loadHistory();
+  } catch (e) {
+    $('history-status').textContent =
+      `This check was NOT saved (${e.message}). The check itself is unaffected.`;
+  }
+}
+
+loadHistory();
 updateCounts();

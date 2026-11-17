@@ -6,12 +6,15 @@
 <title>BuktiKu — Check the claim against its source, offline first</title>
 <meta name="description" content="BuktiKu is an offline-first claim checker: paste a claim and its source. Gemini Nano on-device does the first pass, cloud Gemini via Firebase AI Logic does the deep check, deterministic code decides numbers and dates.">
 <link rel="stylesheet" href="styles.css">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
 </head>
 <body>
 <header class="site-header">
   <div class="wrap">
-    <h1>BuktiKu</h1>
+    <div class="brand">
+      <img class="logo" src="logo.svg" alt="BuktiKu logo" width="76" height="76">
+      <h1>BuktiKu</h1>
+    </div>
     <p class="tagline">Check the claim against its source — offline first.</p>
     <p class="sub">
       Paste a claim and the source it came from. On-device Gemini Nano does the
@@ -66,6 +69,13 @@
     <h2>Routing log</h2>
     <p class="note">Every routing decision this session — which engine ran, why, and how long it took. Fallbacks are stated, never hidden.</p>
     <div id="routing-log"><p class="note">No checks run yet.</p></div>
+  </section>
+
+  <section class="card" id="history-card" hidden>
+    <h2>Saved checks</h2>
+    <p id="history-status" class="note">Loading your history…</p>
+    <div id="history"></div>
+    <p class="note">Saved privately to your own Firestore history (anonymous sign-in — no account, no email). Opening a saved check re-renders its stored verdict without re-running any engine.</p>
   </section>
 </main>
 

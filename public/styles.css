@@ -39,8 +39,18 @@ body {
   text-align: left;
   position: relative;
 }
+.brand {
+  display: flex; align-items: center; gap: 22px;
+  margin-bottom: 14px; flex-wrap: wrap;
+}
+.brand .logo {
+  width: 76px; height: 76px;
+  border-radius: 20px;
+  box-shadow: 0 14px 34px rgba(99, 102, 241, .40);
+  flex: none;
+}
 .site-header h1 {
-  margin: 0 0 10px;
+  margin: 0;
   font-size: clamp(2.9rem, 7vw, 4.4rem);
   font-weight: 800;
   letter-spacing: -1.5px;
@@ -208,6 +218,28 @@ button.primary:disabled { opacity: .55; cursor: wait; transform: none; }
   padding: 3px 11px;
   margin-left: 6px;
 }
+
+/* ------------------------------------------------------------ history */
+.history-item {
+  display: flex; gap: 12px; align-items: center;
+  width: 100%; text-align: left;
+  background: rgba(255, 255, 255, .03);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px 14px;
+  margin: 8px 0;
+  cursor: pointer;
+  color: var(--ink);
+  font: inherit;
+  transition: border-color .2s, background .2s;
+}
+.history-item:hover { border-color: rgba(129, 140, 248, .55); background: var(--grad-soft); }
+.history-item .h-claim {
+  flex: 1; color: var(--muted); font-size: .92rem;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.history-item .h-time { color: var(--faint); font-size: .8rem; white-space: nowrap; }
+.badge.mini { font-size: .72rem; padding: 3px 10px; }
 
 /* ---------------------------------------------------------------- log */
 table.log { width: 100%; border-collapse: collapse; font-size: .9rem; }
