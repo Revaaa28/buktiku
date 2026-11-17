@@ -168,8 +168,9 @@ export class HybridRouter {
           }
         }
         // Cloud may refine the overall verdict only when code found no
-        // hard contradiction — code wins on numbers and dates.
-        if (det.overall === 'Consistent' && cloud.overall) overall = cloud.overall;
+        // hard contradiction — code wins on numbers and dates. A claim
+        // with nothing checkable is the cloud's call entirely.
+        if ((det.overall === 'Consistent' || det.overall === 'Nothing checkable') && cloud.overall) overall = cloud.overall;
         this.record(
           'cloud (Firebase AI Logic)',
           `Deep check ran via Firebase AI Logic (model ${cloud.model}, App Check: ${cloud.appCheckMode}${cloud.attempts > 1 ? `, attempt ${cloud.attempts}` : ''}). Overall from cloud: "${cloud.overall}".`,

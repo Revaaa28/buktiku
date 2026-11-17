@@ -140,7 +140,12 @@ function renderResults({ overall, points }, meta) {
   overallEl.classList.toggle('consistent', overall === 'Consistent');
   overallEl.classList.toggle('contradicted', overall === 'Contradicted');
 
-  $('results').innerHTML = points
+  $('results').innerHTML = (points.length === 0
+    ? `<div class="point">
+        <p class="ptext">Nothing in this claim could be checked by the code engine — it contains no numbers, dates or names to compare against the source.</p>
+        <p class="evidence">Whether the source supports the claim's <em>meaning</em> is a judgement call: that is the cloud engine's job. See the routing log below for whether it ran.</p>
+      </div>`
+    : '') + points
     .map((p, i) => {
       const badge =
         `engine: ${esc(p.engine)}` +

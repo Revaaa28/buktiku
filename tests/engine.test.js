@@ -179,3 +179,16 @@ test('Bahasa Indonesia sample: word-form amount contradicts, wajib condition dro
   assert.ok(kinds.some(k => k === 'condition:contradicted'), kinds.join(','));
   assert.equal(r.overall, 'Contradicted');
 });
+
+test('a claim with nothing checkable is NOT called Consistent', () => {
+  // Rev's live find (2026-11-17): "Harga beras naik" against a fetched
+  // article returned a green "Consistent" although the code engine had
+  // compared nothing at all. Zero points must be its own verdict.
+  const r = compareClaimToSource('Harga beras naik', 'Harga beras di Indonesia naik karena pasokan menurun.');
+  assert.equal(r.points.length, 0);
+  assert.equal(r.overall, 'Nothing checkable');
+  // …while a claim whose values all match still earns Consistent.
+  const ok = compareClaimToSource('Ada 50 beasiswa.', 'Pengumuman: tersedia 50 beasiswa tahun ini.');
+  assert.ok(ok.points.length > 0);
+  assert.equal(ok.overall, 'Consistent');
+});

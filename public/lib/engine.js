@@ -173,7 +173,8 @@ const CONDITION_MARKERS = [
  * Compare a claim against its source.
  * Returns { points, overall } where each point is
  * { id, kind, text, verdict, evidence, engine } and overall is
- * 'Consistent' | 'Partly off' | 'Contradicted'.
+ * 'Consistent' | 'Partly off' | 'Contradicted' | 'Nothing checkable'
+ * (the last when the claim carries no number, date or name at all).
  */
 export function compareClaimToSource(claim, source) {
   const points = [];
@@ -323,10 +324,16 @@ export function compareClaimToSource(claim, source) {
   }
 
   // --- overall -----------------------------------------------------------
+  // Zero checkable points is NOT "Consistent": the claim carried no
+  // number, date or name for code to compare, so nothing was verified.
+  // It gets its own honest verdict — a bare statement like "prices
+  // rose" can only be judged for meaning, which is the cloud layer's
+  // job (the router lets a cloud verdict replace this one).
   const contradicted = points.filter(p => p.verdict === 'contradicted').length;
   const missing = points.filter(p => p.verdict === 'not-in-source').length;
   let overall = 'Consistent';
-  if (contradicted >= 2) overall = 'Contradicted';
+  if (points.length === 0) overall = 'Nothing checkable';
+  else if (contradicted >= 2) overall = 'Contradicted';
   else if (contradicted === 1 || missing >= 1) overall = 'Partly off';
 
   return { points, overall };

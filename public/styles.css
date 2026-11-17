@@ -365,6 +365,7 @@ button.primary:disabled { opacity: .55; cursor: wait; transform: none; }
 }
 .badge.consistent { background: var(--ok); color: #04140d; }
 .badge.contradicted { background: var(--bad); color: #1c050a; }
+.badge.nothing-checkable { background: #8b93a7; color: #10131c; }
 .point {
   border: 1px solid var(--line);
   border-left: 4px solid var(--warn);
