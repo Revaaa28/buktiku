@@ -127,6 +127,11 @@ $('check').addEventListener('click', async () => {
   try {
     const result = await router.check(claim, source, { nanoStatus, online: navigator.onLine });
     renderResults(result);
+    // Bring the outcome to the person: after the response completes,
+    // focus and view land on the verdict, not on the spinner's ghost.
+    const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    $('results-h').focus({ preventScroll: true });
+    $('results-card').scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' });
     renderLog();
     refreshStatus();
     persistCheck(claim, source, result);

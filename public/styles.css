@@ -445,3 +445,7 @@ table.log td:nth-child(2) { color: var(--ink); font-weight: 600; white-space: no
   * { transition: none !important; animation: none !important; }
   .card.reveal-init { opacity: 1; transform: none; }
 }
+
+/* Programmatic focus target after a check completes (no ring needed —
+   the focus exists so keyboard/AT users land on the verdict). */
+#results-h:focus { outline: none; }
