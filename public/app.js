@@ -45,7 +45,7 @@ async function refreshStatus() {
   nanoStatus = await detectNano();
   $('st-nano').textContent = nanoStatus.available
     ? 'available'
-    : `not available (${nanoStatus.status})`;
+    : 'not in this browser — desktop Chrome only';
   $('st-online').textContent = navigator.onLine ? 'online' : 'offline';
   const configured = cloudConfigured();
   $('st-cloud').textContent = configured
