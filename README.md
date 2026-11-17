@@ -118,10 +118,11 @@ browser.
 
 The app ships wired to its real Firebase project (`buktiku-d5216`):
 AI Logic enabled (Gemini Developer API backend, Spark plan), App Check
-in debug-token mode for development (register the token printed in the
-browser console under *App Check → Apps → Manage debug tokens*; a
-reCAPTCHA v3 site key can be dropped into `public/firebase-config.js`
-for production), Firestore created with the rules above, and Anonymous
+registered with the Fraud Defense provider (reCAPTCHA Enterprise —
+Google retired new reCAPTCHA Classic registrations; the Enterprise
+site key lives in `public/firebase-config.js`, and clearing it falls
+back to the App Check debug-token flow for local development),
+Firestore created with the rules above, and Anonymous
 Authentication enabled. To point it at your own project instead,
 replace the values in `public/firebase-config.js` and repeat those
 console steps; with a placeholder config the app still runs, with the

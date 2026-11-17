@@ -8,10 +8,12 @@
 // a real (non-placeholder) config is present. In placeholder mode this
 // module is never invoked and the router logs why.
 //
-// App Check: Firebase AI Logic requires App Check. If a reCAPTCHA v3
-// site key is configured we use ReCaptchaV3Provider; otherwise we switch
-// on the App Check debug token flow (the token is printed to the browser
-// console and must be registered in the Firebase console — see README).
+// App Check: Firebase AI Logic requires App Check. With a site key
+// configured we use the Fraud Defense provider (reCAPTCHA Enterprise —
+// Google retired new reCAPTCHA Classic registrations); without one we
+// switch on the App Check debug token flow for local development (the
+// token is printed to the browser console and must be registered in
+// the Firebase console — see README).
 
 import { firebaseConfig, appCheckSiteKey, isPlaceholderConfig } from '../firebase-config.js';
 
@@ -36,10 +38,10 @@ export async function initFirebase() {
     let appCheckMode;
     if (appCheckSiteKey) {
       appCheck.initializeAppCheck(app, {
-        provider: new appCheck.ReCaptchaV3Provider(appCheckSiteKey),
+        provider: new appCheck.ReCaptchaEnterpriseProvider(appCheckSiteKey),
         isTokenAutoRefreshEnabled: true,
       });
-      appCheckMode = 'reCAPTCHA v3';
+      appCheckMode = 'reCAPTCHA Enterprise (Fraud Defense)';
     } else {
       // Debug-token friendly setup for local development: App Check will
       // print a debug token to the console; register it in the Firebase

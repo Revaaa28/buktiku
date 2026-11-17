@@ -9,10 +9,11 @@
 // shown to every visitor's browser by design) — they are NOT secrets.
 // Access is controlled by Firebase security rules and App Check.
 //
-// App Check: enable the reCAPTCHA v3 provider for this web app in the
-// Firebase console and paste the site key into appCheckSiteKey below.
-// Until a site key is set, the app uses an App Check debug token flow
-// during development (see cloud.js and README.md).
+// App Check: this web app is registered in the Firebase console with
+// the Fraud Defense (reCAPTCHA Enterprise) provider — Google retired
+// new reCAPTCHA Classic registrations, so Enterprise is the supported
+// route. The Enterprise site key lives in appCheckSiteKey below (it is
+// a public client identifier, shown to every visitor by design).
 
 export const firebaseConfig = {
   apiKey: 'AIzaSyCIvjRGTCYNA-rt05RJXDyVlqsFKb_v6ZA',
@@ -24,9 +25,10 @@ export const firebaseConfig = {
   measurementId: 'G-SLMN86DT76',
 };
 
-// reCAPTCHA v3 site key for App Check. Leave empty during local
-// development to use an App Check debug token instead (see cloud.js).
-export const appCheckSiteKey = '';
+// reCAPTCHA Enterprise site key for App Check (Fraud Defense provider,
+// registered in the Firebase console 2026-11-17). Leave empty during
+// local development to use an App Check debug token instead (cloud.js).
+export const appCheckSiteKey = '6LcRvCQuAAAAAN90lRgZ9Kpl9UkL5zppUFiDhB2J';
 
 // True while the config above is still the shipped placeholder.
 export function isPlaceholderConfig() {
