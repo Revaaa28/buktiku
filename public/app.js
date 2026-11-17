@@ -6,7 +6,7 @@ import { SAMPLES } from './lib/samples.js';
 import { HybridRouter } from './lib/router.js';
 import { detectNano } from './lib/nano.js';
 import { cloudConfigured } from './lib/cloud.js';
-import { saveCheck, listChecks } from './lib/store.js';
+import { saveCheck, listChecks, clearChecks } from './lib/store.js';
 
 const $ = id => document.getElementById(id);
 const claimEl = $('claim');
@@ -270,6 +270,27 @@ async function persistCheck(claim, source, result, meta) {
       `This check was NOT saved (${e.message}). The check itself is unaffected.`;
   }
 }
+
+$('clear-log').addEventListener('click', () => {
+  router.log.length = 0;
+  $('routing-log').innerHTML = '<p class="note">Log cleared. New checks will be recorded here.</p>';
+});
+
+$('clear-history').addEventListener('click', async () => {
+  if (!window.confirm('Delete all your saved checks? This cannot be undone.')) return;
+  const btn = $('clear-history');
+  btn.disabled = true;
+  try {
+    const n = await clearChecks();
+    renderHistory([]);
+    $('history-status').textContent =
+      `History cleared — ${n} saved check(s) deleted. This cannot be undone.`;
+  } catch (e) {
+    $('history-status').textContent = `History could NOT be cleared (${e.message}).`;
+  } finally {
+    btn.disabled = false;
+  }
+});
 
 loadHistory();
 updateCounts();

@@ -133,8 +133,9 @@
 
   <section class="card">
     <h2>Routing log</h2>
-    <p class="note">Every routing decision this session — which engine ran, why, and how long it took. Fallbacks are stated, never hidden.</p>
+    <p class="note">Every routing decision this session — which engine ran, why, and how long it took. Fallbacks are stated, never hidden. The log lives only in this page: refreshing clears it, and nothing is stored anywhere.</p>
     <div id="routing-log"><p class="note">No checks run yet.</p></div>
+    <p><button type="button" id="clear-log" class="btn-ghost">Clear log</button></p>
   </section>
 
   <section class="sec" aria-labelledby="principles-h">
@@ -160,6 +161,7 @@
     <h2>Saved checks</h2>
     <p id="history-status" class="note">Loading your history…</p>
     <div id="history"></div>
+    <p><button type="button" id="clear-history" class="btn-ghost">Clear history</button></p>
     <p class="note">Saved privately to your own Firestore history (anonymous sign-in — no account, no email). Opening a saved check re-renders its stored verdict without re-running any engine.</p>
   </section>
 </main>

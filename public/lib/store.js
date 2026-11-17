@@ -76,6 +76,18 @@ export async function saveCheck(claim, source, result, meta) {
   return ref.id;
 }
 
+/**
+ * Delete ALL of this user's saved checks. Resolves with the number of
+ * documents deleted. There is no undo — the caller confirms first.
+ */
+export async function clearChecks() {
+  const store = await initStore();
+  const { fsModule } = store;
+  const snap = await fsModule.getDocs(checksCollection(store));
+  await Promise.all(snap.docs.map(d => fsModule.deleteDoc(d.ref)));
+  return snap.docs.length;
+}
+
 /** Load the newest saved checks for this user, newest first. */
 export async function listChecks(max = HISTORY_LIMIT) {
   const store = await initStore();
