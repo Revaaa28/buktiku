@@ -12,6 +12,10 @@
 //      (Rp 12,000,000 vs Rp 8,000,000), moves the deadline
 //      (15 January 2027 vs 15 December 2026) and drops the
 //      2-years-of-experience requirement.
+//  (d) beasiswa-id — the same scholarship story fully in Bahasa
+//      Indonesia: the broadcast writes the amount in word form
+//      ("Rp 15 juta") and drops the IPK condition; the announcement
+//      uses Indonesian formats (Rp 10.000.000, IPK 3,50, Desember).
 
 export const SAMPLES = [
   {
@@ -53,5 +57,18 @@ export const SAMPLES = [
       'based in Jakarta. Salary: Rp 8,000,000 per month. Requirements: ' +
       "a bachelor's degree and at least 2 years of experience. Apply via " +
       'the PT Sinar Tech careers page before 15 December 2026.',
+  },
+  {
+    id: 'beasiswa-id',
+    label: 'Beasiswa: pengumuman resmi vs broadcast viral (Bahasa Indonesia)',
+    claim:
+      'Kabar gembira! Yayasan Cendekia membagikan 50 beasiswa senilai ' +
+      'Rp 15 juta per semester untuk mahasiswa Universitas Nusantara. ' +
+      'Semua boleh daftar, tanpa syarat IPK! Paling lambat 5 Desember 2026.',
+    source:
+      'Beasiswa Cendekia 2026 — pengumuman resmi. Yayasan Cendekia ' +
+      'menyediakan 50 beasiswa sebesar Rp 10.000.000 per semester bagi ' +
+      'mahasiswa Universitas Nusantara. Pendaftar wajib memiliki IPK ' +
+      'minimal 3,50. Pendaftaran ditutup 5 Desember 2026.',
   },
 ];

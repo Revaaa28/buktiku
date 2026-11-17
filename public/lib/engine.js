@@ -23,6 +23,10 @@ const MONTHS = {
   july: 7, august: 8, september: 9, october: 10, november: 11, december: 12,
   jan: 1, feb: 2, mar: 3, apr: 4, jun: 6, jul: 7, aug: 8, sep: 9,
   sept: 9, oct: 10, nov: 11, dec: 12,
+  // Bahasa Indonesia (April, September and November are spelled the
+  // same in both languages and share the entries above).
+  januari: 1, februari: 2, maret: 3, mei: 5, juni: 6, juli: 7,
+  agustus: 8, oktober: 10, desember: 12,
 };
 
 function pad(n) { return String(n).padStart(2, '0'); }
@@ -41,9 +45,15 @@ function isoDate(y, m, d) {
  * normalised: "10,000,000" -> 10000000, "1.000.000" -> 1000000.
  * A standalone decimal like "3.50" stays 3.5.
  */
+const MULTIPLIERS = {
+  ribu: 1e3, thousand: 1e3,
+  juta: 1e6, million: 1e6,
+  miliar: 1e9, billion: 1e9,
+};
+
 export function extractNumbers(text) {
   const out = [];
-  const re = /(rp|idr|usd|us\$|\$|€|£)?\s*(\d{1,3}(?:[.,]\d{3})+(?:[.,]\d+)?|\d+(?:[.,]\d+)?)\s*(%|percent|persen)?/gi;
+  const re = /(rp|idr|usd|us\$|\$|€|£)?\s*(\d{1,3}(?:[.,]\d{3})+(?:[.,]\d+)?|\d+(?:[.,]\d+)?)(\s*(?:juta|miliar|ribu|million|billion|thousand)\b)?\s*(%|percent|persen)?/gi;
   let m;
   while ((m = re.exec(text)) !== null) {
     const rawNum = m[2];
@@ -58,10 +68,13 @@ export function extractNumbers(text) {
     } else {
       value = Number(rawNum.replace(',', '.'));
     }
+    // "Rp 15 juta" and "15 million" state the scale in words — apply it,
+    // so word-form and digit-form amounts compare equal.
+    if (m[3]) value *= MULTIPLIERS[m[3].trim().toLowerCase()] || 1;
     if (!Number.isFinite(value)) continue;
     let category = 'plain';
     if (m[1]) category = 'currency';
-    else if (m[3]) category = 'percent';
+    else if (m[4]) category = 'percent';
     out.push({ raw: m[0].trim(), value, category });
   }
   return out;
@@ -151,6 +164,9 @@ function firstSentenceWith(text, predicate) {
 const CONDITION_MARKERS = [
   /\bmust\b/i, /\bonly\b/i, /\bminimum\b/i, /\bat least\b/i,
   /\brequired\b/i, /\brequirements?\b/i, /\beligib/i, /\bno later than\b/i,
+  // Bahasa Indonesia condition markers.
+  /\bwajib\b/i, /\bdiharuskan\b/i, /\bharus\b/i, /\bminimal\b/i,
+  /\bmaksimal\b/i, /\bsyarat\b/i, /\bketentuan\b/i, /\bpaling lambat\b/i,
 ];
 
 /**

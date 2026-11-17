@@ -156,3 +156,26 @@ test('names match case-insensitively against raw source text', () => {
   const namePoint = r.points.find(p => p.kind === 'name');
   assert.equal(namePoint.verdict, 'matches');
 });
+
+test('Bahasa Indonesia: months, dot-grouped amounts, word multipliers, comma decimals', () => {
+  // Indonesian date equals its English twin.
+  const dates = extractDates('Pendaftaran ditutup 17 Agustus 2026.');
+  assert.equal(dates[0].iso, '2026-08-17');
+  // "Rp 15 juta" (word form) equals "Rp 15.000.000" (digit form).
+  const a = extractNumbers('senilai Rp 15 juta per semester');
+  const b = extractNumbers('sebesar Rp 15.000.000 per semester');
+  assert.equal(a[0].value, 15000000);
+  assert.equal(a[0].value, b[0].value);
+  // Indonesian comma decimal: IPK 3,50 is 3.5.
+  const gpa = extractNumbers('IPK minimal 3,50');
+  assert.equal(gpa[0].value, 3.5);
+});
+
+test('Bahasa Indonesia sample: word-form amount contradicts, wajib condition drops', () => {
+  const sample = SAMPLES.find(s => s.id === 'beasiswa-id');
+  const r = compareClaimToSource(sample.claim, sample.source);
+  const kinds = r.points.map(p => `${p.kind}:${p.verdict}`);
+  assert.ok(kinds.some(k => k === 'number:contradicted'), kinds.join(','));
+  assert.ok(kinds.some(k => k === 'condition:contradicted'), kinds.join(','));
+  assert.equal(r.overall, 'Contradicted');
+});
