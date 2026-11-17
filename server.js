@@ -1,9 +1,30 @@
 // BuktiKu — minimal static file server (no dependencies).
 // Serves everything in ./public on PORT (env) or 3000.
+// One API route: POST /api/fetch-source {url} -> readable page text,
+// which the client drops into the Source box (visible + editable).
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { extname, join, normalize } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { fetchSource } from './lib/fetch-source.js';
+
+function sendJson(res, status, obj) {
+  res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8' });
+  res.end(JSON.stringify(obj));
+}
+
+async function handleFetchSource(req, res) {
+  let raw = '';
+  for await (const chunk of req) {
+    raw += chunk;
+    if (raw.length > 8192) { sendJson(res, 413, { ok: false, error: 'Request too large.' }); return; }
+  }
+  let url;
+  try { url = JSON.parse(raw).url; } catch { /* handled below */ }
+  if (!url) { sendJson(res, 400, { ok: false, error: 'Missing url.' }); return; }
+  const result = await fetchSource(url);
+  sendJson(res, result.ok ? 200 : 400, result);
+}
 
 const root = join(fileURLToPath(new URL('.', import.meta.url)), 'public');
 const port = Number(process.env.PORT || 3000);
@@ -20,6 +41,10 @@ const MIME = {
 
 const server = createServer(async (req, res) => {
   try {
+    if (req.method === 'POST' && req.url === '/api/fetch-source') {
+      await handleFetchSource(req, res);
+      return;
+    }
     let path = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
     if (path === '/') path = '/index.html';
     const file = normalize(join(root, path));

@@ -64,7 +64,7 @@
       <article class="step">
         <span class="step-num">01</span>
         <h4>Paste the claim and its source</h4>
-        <p>A viral summary next to the announcement it came from. A recruiter's pitch next to the real posting. The first pass runs on your device — your text goes to the cloud only for the deep check, and only when you are online.</p>
+        <p>A viral summary next to the announcement it came from. A recruiter's pitch next to the real posting. Paste both texts, or fetch the source straight from its link — the fetched text lands in the box for you to read first. The first pass runs on your device — your text goes to the cloud only for the deep check, and only when you are online.</p>
       </article>
       <article class="step">
         <span class="step-num">02</span>
@@ -111,6 +111,11 @@
       </div>
       <div>
         <label for="source">Source</label>
+        <div class="fetch-row">
+          <input id="source-url" type="url" inputmode="url" placeholder="…or paste a link to the source page" autocomplete="off">
+          <button id="fetch-source" type="button" class="ghost-btn">Fetch</button>
+        </div>
+        <p id="fetch-note" class="note" hidden></p>
         <textarea id="source" rows="9" placeholder="Paste the original source here — the announcement, receipt, or posting the claim came from…"></textarea>
         <p class="count"><span id="source-count">0</span> characters</p>
       </div>

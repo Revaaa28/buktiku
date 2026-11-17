@@ -26,6 +26,45 @@ function updateCounts() {
 claimEl.addEventListener('input', updateCounts);
 sourceEl.addEventListener('input', updateCounts);
 
+// ------------------------------------------------- fetch source from a link
+// The server reduces the page to readable text; the text lands in the
+// Source box, visible and editable — the check uses exactly what is there.
+$('fetch-source').addEventListener('click', async () => {
+  const note = $('fetch-note');
+  const btn = $('fetch-source');
+  const url = $('source-url').value.trim();
+  note.hidden = false;
+  if (!url) {
+    note.textContent = 'Paste a link first — the Fetch button reads that page as your source.';
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = 'Fetching…';
+  note.textContent = 'Fetching the page…';
+  try {
+    const res = await fetch('/api/fetch-source', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url }),
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'Fetch failed.');
+    sourceEl.value = data.text;
+    sourceEl.dispatchEvent(new Event('input'));
+    let host = '';
+    try { host = new URL(data.finalUrl).hostname; } catch { /* note stays generic */ }
+    note.textContent =
+      `Fetched from ${host || 'the page'} — ${data.text.length.toLocaleString()} characters now in the Source box` +
+      (data.truncated ? ' (the page was long; the text was trimmed to the first 50,000 characters)' : '') +
+      '. Read it before you check — the check uses exactly what is in the box.';
+  } catch (err) {
+    note.textContent = err.message;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Fetch';
+  }
+});
+
 // ------------------------------------------------------------- samples
 for (const s of SAMPLES) {
   const b = document.createElement('button');

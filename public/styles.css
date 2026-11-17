@@ -534,3 +534,31 @@ table.log td:nth-child(2) { color: var(--ink); font-weight: 600; white-space: no
 @media (prefers-reduced-motion: reduce) {
   .marquee-track { animation: none; }
 }
+
+/* --------------------------------------------------------- fetch a link */
+.fetch-row { display: flex; gap: 10px; margin-bottom: 10px; }
+.fetch-row input {
+  flex: 1; min-width: 0;
+  background: rgba(255, 255, 255, .03);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 10px 16px;
+  color: var(--ink);
+  font: inherit; font-size: .92rem;
+}
+.fetch-row input::placeholder { color: var(--faint); }
+.fetch-row input:focus { border-color: rgba(129, 140, 248, .6); outline: none; }
+.ghost-btn {
+  flex: none;
+  border-radius: 999px;
+  border: 1px solid rgba(129, 140, 248, .45);
+  background: rgba(129, 140, 248, .10);
+  color: var(--ink);
+  font: inherit; font-weight: 650; font-size: .92rem;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background .2s, transform .2s;
+}
+.ghost-btn:hover:not(:disabled) { background: rgba(129, 140, 248, .22); transform: translateY(-1px); }
+.ghost-btn:disabled { opacity: .55; cursor: wait; }
+#fetch-note { margin: 0 0 10px; }

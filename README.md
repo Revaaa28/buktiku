@@ -13,7 +13,10 @@ BuktiKu is an offline-first claim checker, built for the
 hackathon. You paste two texts:
 
 - a **claim** — a viral summary, a recruiter's pitch, a reimbursement note; and
-- its **source** — the original announcement, receipt, or posting.
+- its **source** — the original announcement, receipt, or posting. The source
+  can also be fetched from a link: the server reduces the page to readable
+  text and drops it into the Source box, visible and editable, so the check
+  always runs on exactly what you can read.
 
 BuktiKu checks the claim *against that source only*. There is no open-web
 fact-checking and no invented "facts": the source you paste is the ground
