@@ -75,7 +75,7 @@ export function cloudConfigured() {
  */
 export async function cloudDeepCheck(claim, source, deterministicPoints) {
   const { ai, appCheckMode, aiModule } = await initFirebase();
-  const modelName = 'gemini-2.5-flash';
+  const modelName = 'gemini-3.8-flash';
   const model = aiModule.getGenerativeModel(ai, {
     model: modelName,
     generationConfig: { responseMimeType: 'application/json' },
@@ -96,17 +96,48 @@ export async function cloudDeepCheck(claim, source, deterministicPoints) {
       deterministicPoints.map(p => ({ text: p.text, verdict: p.verdict })),
     )}`;
 
-  // Firebase AI Logic is actually CALLED here at runtime:
-  const result = await model.generateContent(prompt);
-  const text = result.response.text();
-  const match = String(text).match(/\{[\s\S]*\}/);
-  if (!match) throw new Error('Cloud model did not return JSON');
-  const parsed = JSON.parse(match[0]);
-  return {
-    overall: parsed.overall || null,
-    explanations: Array.isArray(parsed.explanations) ? parsed.explanations : [],
-    latencyMs: Math.round(performance.now() - started),
-    appCheckMode,
-    model: modelName,
-  };
+  // Firebase AI Logic is actually CALLED here at runtime. The call is
+  // bounded: a per-attempt timeout plus retries on transient errors
+  // (the free-tier endpoint occasionally answers 500 "high demand" or
+  // stalls). If every attempt fails we throw and the router logs the
+  // skip honestly — a hung cloud call must never hang the whole check.
+  const ATTEMPT_TIMEOUT_MS = 45_000;
+  const MAX_ATTEMPTS = 3;
+  let lastError = null;
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    try {
+      const result = await Promise.race([
+        model.generateContent(prompt),
+        new Promise((_, reject) =>
+          setTimeout(
+            () => reject(new Error(`Cloud attempt timed out after ${ATTEMPT_TIMEOUT_MS / 1000}s`)),
+            ATTEMPT_TIMEOUT_MS,
+          ),
+        ),
+      ]);
+      const text = result.response.text();
+      const match = String(text).match(/\{[\s\S]*\}/);
+      if (!match) throw new Error('Cloud model did not return JSON');
+      const parsed = JSON.parse(match[0]);
+      return {
+        overall: parsed.overall || null,
+        explanations: Array.isArray(parsed.explanations) ? parsed.explanations : [],
+        latencyMs: Math.round(performance.now() - started),
+        appCheckMode,
+        model: modelName,
+        attempts: attempt,
+      };
+    } catch (err) {
+      lastError = err;
+      // Errors that will not clear in seconds are never retried: quota
+      // exhaustion, unknown model, bad request, auth failures. (The SDK
+      // appends "(AI/fetch-error)" to every failure, so that marker alone
+      // must never mark an error transient.)
+      if (/quota|404|not found|400|401|403/i.test(err.message || '')) throw err;
+      const transient = /500|503|high demand|timed out|unavailable|deadline/i.test(err.message || '');
+      if (!transient || attempt === MAX_ATTEMPTS) throw err;
+      await new Promise(r => setTimeout(r, attempt * 4000));
+    }
+  }
+  throw lastError;
 }

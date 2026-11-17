@@ -148,7 +148,7 @@ export class HybridRouter {
         if (det.overall === 'Consistent' && cloud.overall) overall = cloud.overall;
         this.record(
           'cloud (Firebase AI Logic)',
-          `Deep check ran via Firebase AI Logic (model ${cloud.model}, App Check: ${cloud.appCheckMode}). Overall from cloud: "${cloud.overall}".`,
+          `Deep check ran via Firebase AI Logic (model ${cloud.model}, App Check: ${cloud.appCheckMode}${cloud.attempts > 1 ? `, attempt ${cloud.attempts}` : ''}). Overall from cloud: "${cloud.overall}".`,
           cloud.latencyMs,
         );
       } catch (err) {
