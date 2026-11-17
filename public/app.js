@@ -200,6 +200,28 @@ async function persistCheck(claim, source, result) {
 loadHistory();
 updateCounts();
 
+// ------------------------------------------------- hero chip parallax
+// The floating verdict chips drift against the pointer. Uses the CSS
+// `translate` property so it composes with their float animation.
+// Fine pointers only, and never under reduced-motion.
+{
+  const hero = document.querySelector('.hero');
+  const chips = document.querySelectorAll('.chip');
+  const fine = window.matchMedia('(pointer: fine)').matches;
+  const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (hero && chips.length && fine && !calm) {
+    hero.addEventListener('pointermove', e => {
+      const r = hero.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      chips.forEach((c, i) => {
+        const d = (i + 1) * 8;
+        c.style.translate = `${(-x * d).toFixed(1)}px ${(-y * d).toFixed(1)}px`;
+      });
+    });
+  }
+}
+
 // ------------------------------------------------------- scroll reveal
 // Cards fade/rise in as they enter the viewport. The hidden state is
 // only ever applied from here, so a no-JS visit sees everything.

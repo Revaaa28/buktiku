@@ -9,40 +9,63 @@
 <link rel="icon" type="image/svg+xml" href="logo.svg">
 </head>
 <body>
-<header class="site-header">
-  <div class="wrap">
-    <div class="brand">
-      <img class="logo" src="logo.svg" alt="BuktiKu logo" width="76" height="76">
-      <h1>BuktiKu</h1>
-    </div>
-    <p class="tagline">Check the claim against its source — offline first.</p>
-    <p class="sub">
+
+<nav class="nav">
+  <div class="wrap nav-in">
+    <span class="nav-brand">
+      <img src="logo.svg" alt="" width="34" height="34">
+      <span>BuktiKu</span>
+    </span>
+    <span class="nav-pill">Firebase #BuildHybridAI 2026</span>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-in">
+    <img class="hero-logo" src="logo.svg" alt="BuktiKu logo" width="104" height="104">
+    <h1 class="hero-title">Check the claim.<br><span class="grad-text">Trust the source.</span></h1>
+    <p class="hero-sub">
       Paste a claim and the source it came from. On-device Gemini Nano does the
       first pass without your documents leaving the device, cloud Gemini via
       Firebase AI Logic does the deep check when you are online, and
       deterministic code — not a model — decides numbers, dates and names.
       Claim-vs-source consistency only; no open-web fact-checking.
     </p>
+    <div class="hero-cta">
+      <a class="btn-ghost" href="#checker">Run a check ↓</a>
+      <span class="hero-note">Offline-first · No account · The floating chips are real catches from the built-in sample</span>
+    </div>
   </div>
+  <div class="chip chip-a" aria-hidden="true">✕&nbsp; Rp 15,000,000 ≠ Rp 10,000,000</div>
+  <div class="chip chip-b" aria-hidden="true">✓&nbsp; Deadline matches: 30 Nov 2026</div>
+  <div class="chip chip-c" aria-hidden="true">!&nbsp; Dropped condition: GPA ≥ 3.50</div>
 </header>
 
 <main class="wrap">
   <section class="card" aria-labelledby="status-h">
     <h2 id="status-h">Engine status</h2>
-    <ul class="status-list">
-      <li>On-device Gemini Nano (Chrome Prompt API): <strong id="st-nano">detecting…</strong></li>
-      <li>Connection: <strong id="st-online">…</strong></li>
-      <li>Cloud (Firebase AI Logic): <strong id="st-cloud">…</strong></li>
-    </ul>
+    <div class="tiles">
+      <div class="tile">
+        <span class="tile-label">On-device Gemini Nano (Chrome Prompt API)</span>
+        <strong id="st-nano">detecting…</strong>
+      </div>
+      <div class="tile">
+        <span class="tile-label">Connection</span>
+        <strong id="st-online">…</strong>
+      </div>
+      <div class="tile">
+        <span class="tile-label">Cloud (Firebase AI Logic)</span>
+        <strong id="st-cloud">…</strong>
+      </div>
+    </div>
     <p id="fallback-note" class="note" hidden></p>
   </section>
 
-  <section class="card">
-    <h2>Try a sample</h2>
-    <div id="samples" class="sample-row"></div>
-  </section>
-
-  <section class="card">
+  <section class="card console" id="checker">
+    <div class="console-head">
+      <h2>Try a sample — or paste your own</h2>
+      <div id="samples" class="sample-row"></div>
+    </div>
     <div class="grid">
       <div>
         <label for="claim">Claim</label>

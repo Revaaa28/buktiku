@@ -31,6 +31,7 @@ async function main() {
     const page = await browser.newPage({ viewport: { width: 1280, height: 900 }, ignoreHTTPSErrors: true });
     await page.goto(`http://localhost:${PORT}/`, { waitUntil: 'load', timeout: 60000 });
     await page.waitForSelector('#samples button', { timeout: 30000 });
+    await page.waitForTimeout(1800); // let the hero entrance animation settle
     await page.screenshot({ path: path.join(OUT, '01-hero.png') });
     await page.click('#samples button');
     await page.click('#check');
