@@ -78,12 +78,12 @@ function renderResults({ overall, points }) {
   overallEl.classList.toggle('contradicted', overall === 'Contradicted');
 
   $('results').innerHTML = points
-    .map(p => {
+    .map((p, i) => {
       const badge =
         `engine: ${esc(p.engine)}` +
         (p.extractedBy ? ` · extracted by: ${esc(p.extractedBy)}` : '') +
         ` · ${p.latencyMs != null ? p.latencyMs + ' ms' : '—'}`;
-      return `<div class="point ${esc(p.verdict)}">
+      return `<div class="point ${esc(p.verdict)}" style="animation-delay:${Math.min(i * 90, 630)}ms">
         <p class="ptext"><span class="verdict-chip">${esc(p.verdict)}</span>
         <span class="route-badge">${badge}</span></p>
         <p class="ptext">${esc(p.text)}</p>
@@ -199,3 +199,29 @@ async function persistCheck(claim, source, result) {
 
 loadHistory();
 updateCounts();
+
+// ------------------------------------------------------- scroll reveal
+// Cards fade/rise in as they enter the viewport. The hidden state is
+// only ever applied from here, so a no-JS visit sees everything.
+{
+  const cards = document.querySelectorAll('.card');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      entries => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add('revealed');
+            io.unobserve(e.target);
+          }
+        }
+      },
+      { threshold: 0.08 },
+    );
+    for (const c of cards) {
+      c.classList.add('reveal-init');
+      io.observe(c);
+    }
+    // Safety net: nothing may stay hidden if the observer misbehaves.
+    setTimeout(() => cards.forEach(c => c.classList.add('revealed')), 2500);
+  }
+}
