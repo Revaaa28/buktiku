@@ -64,3 +64,12 @@ test('fetchSource passes plain text through and reports HTTP errors', async () =
   assert.equal(r2.ok, false);
   assert.match(r2.error, /404/);
 });
+
+test('validateFetchUrl meets public pasting habits halfway', () => {
+  const bare = validateFetchUrl('example.com/news/1');
+  assert.equal(bare.ok, true);
+  assert.equal(bare.url.protocol, 'https:');
+  const comma = validateFetchUrl('https://example.com/news/1,');
+  assert.equal(comma.ok, true);
+  assert.equal(comma.url.pathname, '/news/1');
+});

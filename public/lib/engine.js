@@ -253,8 +253,14 @@ export function compareClaimToSource(claim, source) {
   void claimNumberValues;
 
   // --- names in the claim ----------------------------------------------
+  // A name counts as present when the source's own name extraction found
+  // it OR the name appears verbatim (case-insensitive, whole words) in
+  // the source text — public sources often write names in lowercase or
+  // ALL-CAPS, where capitalisation-based extraction sees nothing.
+  const nameInText = name =>
+    new RegExp(`\\b${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').test(source);
   for (const name of claimNames) {
-    if (sourceNameSet.has(name.toLowerCase())) {
+    if (sourceNameSet.has(name.toLowerCase()) || nameInText(name)) {
       points.push({
         id: nextId(), kind: 'name',
         text: `Name in claim: ${name}`,

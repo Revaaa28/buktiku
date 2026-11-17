@@ -144,3 +144,15 @@ test('control: a number absent from the source is flagged not-in-source', () => 
   );
   assert.ok(points.some(p => p.kind === 'number' && p.verdict === 'not-in-source'));
 });
+
+test('names match case-insensitively against raw source text', () => {
+  // Source writes the name in lowercase (as a pasted headline would);
+  // capitalisation-based extraction sees no names in the source, but the
+  // name is plainly there and must not be reported as missing.
+  const r = compareClaimToSource(
+    'Ijazah Jokowi akan ditindaklanjuti.',
+    'katanya ijazah jokowi kau di tindak lanjuti oleh kampus',
+  );
+  const namePoint = r.points.find(p => p.kind === 'name');
+  assert.equal(namePoint.verdict, 'matches');
+});
